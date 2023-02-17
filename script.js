@@ -1,4 +1,5 @@
 const ANIMATION_TIME_MS = 150;
+const ANIMATION_FLOATING_MSG_MS = 2000;
 const BOARD = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
 const RANGES = [
 	[0, 1, 2, 3],
@@ -14,7 +15,10 @@ const DIRECTIONS = {
 };
 let LAST_HIDDEN_INDEX = BOARD.findIndex((val) => val === 0);
 let MOVES = 0;
-const moveCounter = document.querySelector('.moveCounter');
+const moveCounter = document.querySelector('.moves');
+let msg25 = false;
+let msg50 = false;
+let msg75 = false;
 
 // CREATING TILES:
 const boardElement = document.querySelector('.board');
@@ -72,9 +76,20 @@ function CheckForWin() {
 	let checker = 0;
 	BOARD.forEach((value, index) => {
 		if (value !== index + 1) ++checker;
+		if (index == 4 && checker == 1 && !msg25) {
+			DisplayFloatingMsg('YOU GOT THIS');
+			msg25 = true;
+		} else if (index == 8 && checker == 1 && !msg50) {
+			DisplayFloatingMsg('KEEP GOING!');
+			msg50 = true;
+		} else if (index == 12 && checker == 1 && !msg75) {
+			DisplayFloatingMsg('ALMOST THERE!');
+			msg75 = true;
+		} else if (MOVES % 50 == 0 && MOVES != 0)
+			DisplayFloatingMsg(`${MOVES} MOVES!`);
 	});
 	if (checker === 1) {
-		alert('YOU WON!');
+		DisplayFloatingMsg('AWESOME!');
 	}
 }
 
@@ -98,7 +113,7 @@ async function ShuffleBoard() {
 }
 
 async function RenderBoard() {
-	moveCounter.innerHTML = `Moves ${MOVES}`;
+	moveCounter.innerHTML = MOVES;
 	const tiles = document.querySelectorAll('.tile');
 	tiles[LAST_HIDDEN_INDEX].setAttribute('class', 'tile');
 	for (let i = 0; i < BOARD.length; ++i) {
@@ -110,14 +125,25 @@ async function RenderBoard() {
 	}
 	setTimeout(() => {
 		CheckForWin();
-	}, 50);
+	}, ANIMATION_TIME_MS);
+}
+
+function DisplayFloatingMsg(text) {
+	const floatingMsg = document.querySelector('.floatingMsg');
+	floatingMsg.textContent = text;
+	floatingMsg.style.display = 'block';
+	floatingMsg.style.animation = `floatingMsgAnim ${ANIMATION_FLOATING_MSG_MS}ms ease forwards`;
+	setTimeout(() => {
+		floatingMsg.style.animation = 'unset';
+		floatingMsg.style.display = 'none';
+	}, ANIMATION_FLOATING_MSG_MS);
 }
 
 function ResetGame() {
 	document.querySelectorAll('.tile').forEach((tile, index) => {
-		tile.addEventListener('click', () =>
-			MoveTile(index, IdentifyDirection(index))
-		);
+		tile.addEventListener('click', () => {
+			MoveTile(index, IdentifyDirection(index));
+		});
 	});
 	ShuffleBoard();
 	MOVES = 0;
@@ -125,3 +151,19 @@ function ResetGame() {
 }
 
 ResetGame();
+
+// Registering keypresses for gameplay:
+document.addEventListener(
+	'keydown',
+	(e) => {
+		const zeroIndex = BOARD.findIndex((val) => val === 0);
+		const moveToDirection = {
+			ArrowUp: DIRECTIONS.DOWN,
+			ArrowDown: DIRECTIONS.UP,
+			ArrowRight: DIRECTIONS.LEFT,
+			ArrowLeft: DIRECTIONS.RIGHT,
+		};
+		MoveTile(zeroIndex, moveToDirection[e.code]);
+	},
+	false
+);

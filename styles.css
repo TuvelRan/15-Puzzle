@@ -44,6 +44,15 @@ body {
 	background: var(--tile-color);
 	user-select: none;
 	cursor: grab;
+	transition: transform 0.2s, font-size 0.2s, background 0.2s,
+		border-radius 0.2s;
+}
+
+.tile:hover {
+	transform: scale(1.025);
+	font-size: calc(var(--tile-font-size) + 15px);
+	background: red;
+	border-radius: 5px;
 }
 
 .hidden {
@@ -99,4 +108,45 @@ body {
 	box-shadow: 0 0 0 var(--board-borders) white;
 	border: none;
 	cursor: pointer;
+}
+
+.moveCounter {
+	background: var(--board-background);
+	color: white;
+	font-family: monospace;
+	font-size: calc(var(--tile-font-size) - 1rem);
+	padding: calc(var(--board-borders) * 2) calc(var(--board-borders) * 3);
+	box-shadow: 0 0 0 var(--board-borders) white;
+	border: none;
+	cursor: pointer;
+	display: flex;
+	gap: 10px;
+}
+
+.moves {
+	background: red;
+	padding: 0 5px;
+}
+
+.floatingMsg {
+	display: none;
+	position: absolute;
+	font-size: 8vw;
+	font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+	text-shadow: -3px 3px 0px black;
+	color: white;
+	opacity: 0.75;
+	pointer-events: none;
+}
+
+@keyframes floatingMsgAnim {
+	0% {
+		transform: translateX(-100vw);
+	}
+	50% {
+		transform: translateX(0) translateY(-15vh);
+	}
+	100% {
+		transform: translateX(100vw);
+	}
 }
