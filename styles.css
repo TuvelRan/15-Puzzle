@@ -1,0 +1,102 @@
+:root {
+	--body-background: lightblue;
+	--board-background: brown;
+	--board-size: 600px;
+	--tile-size: 150px;
+	--tile-color: crimson;
+	--tile-font-size: 2.5rem;
+	--tile-font-color: white;
+	--board-borders: 5px;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	background: var(--body-background);
+	font-family: monospace;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+	flex-direction: column;
+	gap: calc(var(--board-borders) + 10px);
+	height: 100vh;
+}
+
+.board {
+	height: var(--board-size);
+	width: var(--board-size);
+	background: var(--board-background);
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr 1fr;
+	gap: var(--board-borders);
+	padding: var(--board-borders);
+	box-shadow: 0 0 0 var(--board-borders) white;
+}
+
+.tile {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: var(--tile-font-size);
+	color: var(--tile-font-color);
+	background: var(--tile-color);
+	user-select: none;
+	cursor: grab;
+}
+
+.hidden {
+	opacity: 0;
+}
+
+@keyframes moveUp {
+	from {
+		transform: translateY(
+			calc(var(--tile-size) - var(--board-borders) * 5)
+		);
+	}
+}
+
+@keyframes moveDown {
+	from {
+		transform: translateY(
+			calc(-1 * var(--tile-size) + var(--board-borders) * 5)
+		);
+	}
+}
+
+@keyframes moveRight {
+	from {
+		transform: translateX(
+			calc(-1 * var(--tile-size) + var(--board-borders) * 5)
+		);
+	}
+}
+
+@keyframes moveLeft {
+	from {
+		transform: translateX(
+			calc(var(--tile-size) - var(--board-borders) * 5)
+		);
+	}
+}
+
+.gameMenu {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: var(--board-size);
+}
+
+.newGameBtn {
+	outline: none;
+	background: var(--board-background);
+	color: white;
+	font-family: monospace;
+	font-size: calc(var(--tile-font-size) - 1rem);
+	padding: calc(var(--board-borders) * 2) calc(var(--board-borders) * 3);
+	box-shadow: 0 0 0 var(--board-borders) white;
+	border: none;
+	cursor: pointer;
+}
